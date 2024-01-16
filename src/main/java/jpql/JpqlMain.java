@@ -1,6 +1,8 @@
 package jpql;
 
 import javax.persistence.*;
+import javax.persistence.criteria.From;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -18,24 +20,29 @@ public class JpqlMain {
         try {
 
 
-            for (int i = 0; i < 100; i++) {
-                Member member = new Member();
-                member.setUsername("member" + i);
-                member.setAge(i);
-                em.persist(member);
-            }
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("관리자");
+            member.setAge(10);
+            member.setTeam(team);
+            member.setMemberType(MemberType.ADMIN);
+
+
+            em.persist(member);
+
 
             em.flush();
             em.clear();
 
-            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(0)
-                    .setMaxResults(10)
-                    .getResultList();
 
-            System.out.println("resultList.size() = " + resultList.size());
-            for (Member member1 : resultList) {
-                System.out.println("member1 = " + member1);
+            String query = "select t.members From Team t";
+
+            Collection resultList = em.createQuery(query, Collection.class).getResultList();
+            for (Object o : resultList) {
+                System.out.println("o = " + o);
                 
             }
 
