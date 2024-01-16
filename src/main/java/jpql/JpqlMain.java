@@ -16,20 +16,24 @@ public class JpqlMain {
         tx.begin();
 
         try {
-            
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setAge(23);
-            em.persist(member);
 
-            Member member2 = new Member();
-            member2.setUsername("member2");
-            member2.setAge(34);
-            em.persist(member2);
 
-            List<Member> resultList = em.createQuery("select m from Member m where m.username = :username", Member.class)
-                    .setParameter("username", "member1")
+            for (int i = 0; i < 100; i++) {
+                Member member = new Member();
+                member.setUsername("member" + i);
+                member.setAge(i);
+                em.persist(member);
+            }
+
+            em.flush();
+            em.clear();
+
+            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(0)
+                    .setMaxResults(10)
                     .getResultList();
+
+            System.out.println("resultList.size() = " + resultList.size());
             for (Member member1 : resultList) {
                 System.out.println("member1 = " + member1);
                 

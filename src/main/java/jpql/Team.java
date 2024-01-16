@@ -15,7 +15,7 @@ public class Team {
 
     private String name;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 
     public Long getId() {
